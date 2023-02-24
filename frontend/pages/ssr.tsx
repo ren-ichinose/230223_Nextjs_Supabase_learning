@@ -1,12 +1,13 @@
-import { GetStaticProps, NextPage } from 'next'
+import { GetServerSideProps, NextPage } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import React from 'react'
 import Layout from '../components/Layout'
 import { Notice, Task } from '../types/types'
 import { supabase } from '../utils/supabase'
 
-export const getStaticProps: GetStaticProps = async () => {
-  console.log('getStaticProps/ssg invocked')
+export const getServerSideProps: GetServerSideProps = async () => {
+  console.log('getServerSideProps/ssr invocked')
   const { data: tasks } = await supabase
     .from('todos')
     .select('*')
@@ -18,16 +19,16 @@ export const getStaticProps: GetStaticProps = async () => {
   return { props: { tasks, notices } }
 }
 
-type StaticProps = {
+type ServerSideProps = {
   tasks: Task[]
   notices: Notice[]
 }
 
-const Ssg: NextPage<StaticProps> = ({ tasks, notices }) => {
-  const router = useRouter()
+const Ssr: NextPage<ServerSideProps> = ({ tasks, notices }) => {
+  const router = useRouter();
   return (
-    <Layout title="SSG">
-      <p className="mb-3 text-blue-500">SSG</p>
+    <Layout title="ssr">
+      <p className="mb-3 text-pink-500">SSR</p>
       <ul className="mb-3">
         {tasks.map((task) => {
           return (
@@ -46,15 +47,20 @@ const Ssg: NextPage<StaticProps> = ({ tasks, notices }) => {
           )
         })}
       </ul>
-      <Link href="/ssr">Link to ssr</Link>
-      <Link href="/ssr" prefetch={false}>
-        <a className="my-3 text-xs"> Link to ssr</a>
+      <Link href="/ssg" prefetch={false}>
+        <a className="my-3 text-xs"> Link to ssg</a>
       </Link>
-      <button className="mb-3 text-xs" onClick={() => router.push('/ssr')}>
-        Route to ssr
+      <Link href="/isr" prefetch={false}>
+        <a className="mb-3 text-xs"> Link to isr</a>
+      </Link>
+      <button className="mb-3 text-xs" onClick={() => router.push('/ssg')}>
+        Route to ssg
+      </button>
+      <button className="mb-3 text-xs" onClick={() => router.push('/isr')}>
+        Route to isr
       </button>
     </Layout>
   )
 }
 
-export default Ssg
+export default Ssr
