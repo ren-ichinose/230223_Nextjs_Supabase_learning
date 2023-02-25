@@ -7,7 +7,7 @@ import { Notice, Task } from '../types/types'
 import { supabase } from '../utils/supabase'
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  console.log('getServerSideProps/ssr invocked')
+  console.log('getServerSideProps/ssr invoked')
   const { data: tasks } = await supabase
     .from('todos')
     .select('*')
@@ -16,18 +16,18 @@ export const getServerSideProps: GetServerSideProps = async () => {
     .from('notices')
     .select('*')
     .order('created_at', { ascending: true })
+
   return { props: { tasks, notices } }
 }
-
-type ServerSideProps = {
+type StaticProps = {
   tasks: Task[]
   notices: Notice[]
 }
 
-const Ssr: NextPage<ServerSideProps> = ({ tasks, notices }) => {
-  const router = useRouter();
+const Ssr: NextPage<StaticProps> = ({ tasks, notices }) => {
+  const router = useRouter()
   return (
-    <Layout title="ssr">
+    <Layout title="SSR">
       <p className="mb-3 text-pink-500">SSR</p>
       <ul className="mb-3">
         {tasks.map((task) => {

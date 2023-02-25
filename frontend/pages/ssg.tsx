@@ -6,7 +6,7 @@ import { Notice, Task } from '../types/types'
 import { supabase } from '../utils/supabase'
 
 export const getStaticProps: GetStaticProps = async () => {
-  console.log('getStaticProps/ssg invocked')
+  console.log('getStaticProps/ssg invoked')
   const { data: tasks } = await supabase
     .from('todos')
     .select('*')
@@ -17,12 +17,10 @@ export const getStaticProps: GetStaticProps = async () => {
     .order('created_at', { ascending: true })
   return { props: { tasks, notices } }
 }
-
 type StaticProps = {
   tasks: Task[]
   notices: Notice[]
 }
-
 const Ssg: NextPage<StaticProps> = ({ tasks, notices }) => {
   const router = useRouter()
   return (
@@ -46,7 +44,6 @@ const Ssg: NextPage<StaticProps> = ({ tasks, notices }) => {
           )
         })}
       </ul>
-      <Link href="/ssr">Link to ssr</Link>
       <Link href="/ssr" prefetch={false}>
         <a className="my-3 text-xs"> Link to ssr</a>
       </Link>
