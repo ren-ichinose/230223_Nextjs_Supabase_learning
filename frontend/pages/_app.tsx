@@ -53,7 +53,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   supabase.auth.onAuthStateChange((event, _) => {
     if (event === 'SIGNED_IN' && pathname === '/') {
-      push('Dashboard')
+      push('dashboard')
     }
     if (event === 'SIGNED_OUT') {
       push('/')
