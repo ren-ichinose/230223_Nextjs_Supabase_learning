@@ -2,10 +2,7 @@ import '../styles/globals.css'
 import type { AppProps, NextWebVitalsMetric } from 'next/app'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
-import { useRouter } from 'next/router'
-import { supabase } from '../utils/supabase'
-import { useEffect } from 'react'
-
+import { useValidateSession } from '../hooks/useValidateSession'
 
 export function reportWebVitals(metric: NextWebVitalsMetric) {
   switch (metric.name) {
@@ -40,35 +37,13 @@ const queryClient = new QueryClient({
 })
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const { push, pathname } = useRouter()
-
-  const validateSession = async () => {
-    const user = supabase.auth.user()
-    if (user && pathname === '/') {
-      push('/dashboard')
-    } else if (!user && pathname !== '/') {
-      await push('/')
-    }
-  }
-
-  supabase.auth.onAuthStateChange((event, _) => {
-    if (event === 'SIGNED_IN' && pathname === '/') {
-      push('dashboard')
-    }
-    if (event === 'SIGNED_OUT') {
-      push('/')
-    }
-  })
-
-  useEffect(() => {
-    validateSession()
-  }, [])
+  useValidateSession()
   return (
     <QueryClientProvider client={queryClient}>
       <Component {...pageProps} />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
-    )
-  }
+  )
+}
 
 export default MyApp
