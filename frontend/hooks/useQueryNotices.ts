@@ -2,7 +2,7 @@ import { useQuery } from 'react-query'
 import { Notice } from '../types/types'
 import { supabase } from '../utils/supabase'
 
-export const useQuerrNotices = () => {
+export const useQueryNotices = () => {
   const getNotices = async () => {
     const { data, error } = await supabase
       .from('notices')
